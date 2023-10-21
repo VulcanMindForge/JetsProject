@@ -5,15 +5,56 @@ Version:
  */
 package com.skilldistillery.airships.app;
 
-public class AirshipApp {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-	// Function:
+import com.skilldistillery.airships.entities.Airship;
+import com.skilldistillery.airships.entities.DockingTower;
+
+public class AirshipApp {
+DockingTower dockingTower;
+Scanner kb = new Scanner(System.in);
+
 	public static void main(String[] args) {
 		AirshipApp app = new AirshipApp();
 		app.run();
 	}
 	
-	public void run() {
+	private void run() {
+		
+	}
+	
+	private List<Airship> getShipsFromFile(String fileName){
+		List<Airship> airships = new ArrayList<>();
+		return airships;
+	}
+	
+	private void displayMenu() {
+		
+	}
+	
+	private void menuSwitch(int choice) {
+		
+	}
+	
+	private void fastestShip() {
+		
+	}
+	
+	private void longestRangeShip() {
+		
+	}
+	
+	private void addNewShip() {
+		
+	}
+	
+	private void removeShip() {
+		
+	}
+	
+	private void farewell() {
 		
 	}
 }
