@@ -33,4 +33,4 @@ Establish variables and method stubs
 # Lessons to research
 
 # Link to initial UML Files
-[Class Diagrams UML]https://github.com/VulcanMindForge/JetsProject/tree/main/UML%20Diagrams
+[Class Diagrams UML](https://github.com/VulcanMindForge/JetsProject/tree/main/UML%20Diagrams)
