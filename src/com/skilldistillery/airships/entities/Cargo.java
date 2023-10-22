@@ -6,6 +6,6 @@ Version:
 package com.skilldistillery.airships.entities;
 
 public interface Cargo {
-	public void loadCargo();
-	public void offloadCargo();
+	public int loadCargo(int amt);
+	public int offloadCargo(int amt);
 }

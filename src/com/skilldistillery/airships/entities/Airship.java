@@ -11,6 +11,7 @@ public abstract class Airship {
 	private int range;
 	private long price;
 	private double energyCap;
+	private boolean isFlying;
 	
 	public Airship(String model, double speed, int range, long price, double energyCap) {
 		super();
@@ -37,22 +38,50 @@ public abstract class Airship {
 		return range;
 	}
 
-
+	
 
 	public long getPrice() {
 		return price;
 	}
 
-
+	
 
 	public double getEnergyCap() {
 		return energyCap;
 	}
-
+	
+	public boolean getIsFlying() {
+		return isFlying;
+	}
 
 
 	public abstract void fly();
 	public abstract double recharge();
 	public abstract void dock();
 	public abstract double getSpeedInKnots();
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Airship [");
+		if (model != null) {
+			builder.append("model=");
+			builder.append(model);
+			builder.append(", ");
+		}
+		builder.append("speed=");
+		builder.append(speed);
+		builder.append(", range=");
+		builder.append(range);
+		builder.append(", price=");
+		builder.append(price);
+		builder.append(", energyCap=");
+		builder.append(energyCap);
+		builder.append(", isFlying=");
+		builder.append(isFlying);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 }

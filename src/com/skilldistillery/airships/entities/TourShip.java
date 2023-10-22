@@ -13,6 +13,7 @@ public class TourShip extends Airship {
 
 	@Override
 	public void fly() {
+		System.out.println(toString() + " can fly for " + this.getRange() / this.getSpeed() + " hours.");
 	}
 
 	@Override
@@ -27,6 +28,18 @@ public class TourShip extends Airship {
 	@Override
 	public double getSpeedInKnots() {
 		return 0;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TourShip [");
+		if (super.toString() != null) {
+			builder.append("toString()=");
+			builder.append(super.toString());
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 	
 	

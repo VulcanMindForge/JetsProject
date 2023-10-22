@@ -1,0 +1,2 @@
+CombatShip, "Frigate", 35, 3000, 7640000, 500, 10
+MultiShip, "Brigantine", 30, 3500, 6697250, 500, 5, 10

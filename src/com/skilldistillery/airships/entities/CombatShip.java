@@ -23,6 +23,7 @@ public class CombatShip extends Airship implements Combat {
 
 	@Override
 	public void attack() {
+		System.out.println("We're headed over to blow them out of the sky!");
 	}
 
 	@Override
@@ -35,6 +36,7 @@ public class CombatShip extends Airship implements Combat {
 
 	@Override
 	public void fly() {
+		System.out.println(toString() + " can fly for " + this.getRange() / this.getSpeed() + " hours.");
 	}
 
 	@Override
@@ -50,5 +52,20 @@ public class CombatShip extends Airship implements Combat {
 	public double getSpeedInKnots() {
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CombatShip [numWeapons=");
+		builder.append(numWeapons);
+		builder.append(", ");
+		if (super.toString() != null) {
+			builder.append("toString()=");
+			builder.append(super.toString());
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+	
 	
 }
