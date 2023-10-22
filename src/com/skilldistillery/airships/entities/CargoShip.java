@@ -8,17 +8,17 @@ package com.skilldistillery.airships.entities;
 public class CargoShip extends Airship implements Cargo {
 	private int cargoCapacityMax;
 	private int cargo;
-	
 
-	public CargoShip(String model, double speed, int range, long price, double energyCap, int cargoCapacity) {
-		super(model, speed, range, price, energyCap);
+	public CargoShip(String model, double speed, int range, long price, int cargoCapacity) {
+		super(model, speed, range, price);
 		this.cargoCapacityMax = cargoCapacity;
+		this.cargo = 0;
 	}
-	
-	
+
 	public int getCargoCapacityMax() {
 		return cargoCapacityMax;
 	}
+
 	public int getCargo() {
 		return cargo;
 	}
@@ -61,41 +61,42 @@ public class CargoShip extends Airship implements Cargo {
 
 	@Override
 	public void fly() {
-		System.out.println(toString() + " can fly for " + this.getRange() / this.getSpeed() + " hours.");
-	}
-
-	@Override
-	public double recharge() {
-		return 0;
+		double flightTime = this.getRange() / this.getSpeed();
+		System.out.printf("%s \n This ship can fly for %.2f hours.\n", toString(), flightTime);
 	}
 
 	@Override
 	public void dock() {
+		System.out.println("Prepare to unload all cargo. Please make space.");
 	}
 
 	@Override
 	public double getSpeedInKnots() {
-		return 0;
+		double speedInKnots =  0.86898 * this.getSpeed();
+		return speedInKnots;
 	}
-
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CargoShip [cargoCapacityMax=");
-		builder.append(cargoCapacityMax);
-		builder.append(", cargo=");
-		builder.append(cargo);
-		builder.append(", ");
-		if (super.toString() != null) {
-			builder.append("toString()=");
-			builder.append(super.toString());
+		builder.append("This is a cargo ship: \n");
+		if (getModel() != null) {
+			builder.append("Model is: ");
+			builder.append(getModel());
+			builder.append(", ");
 		}
-		builder.append("]");
+		builder.append("Maximum cargo space is: ");
+		builder.append(getCargoCapacityMax());
+		builder.append(" units, Current used cargo space is: ");
+		builder.append(getCargo());
+		builder.append(" units, Speed is: ");
+		builder.append(String.format("%.2f", getSpeedInKnots()));
+		builder.append(" knots, Range is: ");
+		builder.append(getRange());
+		builder.append(" miles, Ship price is: ");
+		builder.append(getPrice());
+		builder.append(" dollars.");
 		return builder.toString();
 	}
 
-	
-	
-	
 }

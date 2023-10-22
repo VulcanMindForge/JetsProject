@@ -9,6 +9,7 @@ import java.util.List;
 
 public class DockingTower {
 	private List<Airship> airships;
+	boolean isDocked = true;
 
 	public DockingTower(List<Airship> airships) {
 		this.airships = airships;
@@ -56,76 +57,40 @@ public class DockingTower {
 		return numWeapons;
 	}
 
+	public boolean getIsDocked() {
+		return isDocked;
+	}
+
 	public void flyAll() {
 		for (Airship airship : airships) {
 			airship.fly();
+			System.out.println();
 		}
+		isDocked = false;
 	}
 
 	public void dockAll() {
 		for (Airship airship : airships) {
 			airship.dock();
 		}
+		isDocked = true;
 	}
 
 	public void displayFlightStatus() {
 		for (Airship airship : airships) {
-			if (airship.getIsFlying()) {
-				System.out.println(airship + " is in flight.");
-			} else {
-				System.out.println(airship + " is still docked.");
-			}
+			System.out.println(airship.getModel() + (airship.getIsFlying() ? " is in flight." : " is still docked."));
 		}
 	}
 
-	public void rechargeShips() {
-		for (Airship airship : airships) {
-			if (!airship.getIsFlying()) {
-				airship.recharge();
-			}
-		}
-	}
-
-	public void addShipToTower(String shipLine) {
-		String[] airship = shipLine.split(", ");
-		String type = airship[0];
-		String model = airship[1];
-		double speed = Double.parseDouble(airship[2]);
-		int range = Integer.parseInt(airship[3]);
-		long price = Long.parseLong(airship[4]);
-		double energyCap = Double.parseDouble(airship[5]);
-		int weapons = 0;
-		int cargoCap = 0;
-		if (airship.length == 7) {
-			weapons = Integer.parseInt(airship[6]);
-			cargoCap = Integer.parseInt(airship[6]);
-		}
-		if (airship.length == 8) {
-			weapons = Integer.parseInt(airship[6]);
-			cargoCap = Integer.parseInt(airship[7]);
-		}
-
-		if (type.toLowerCase().equals("multiship")) {
-			Airship p = new MultiShip(model, speed, range, price, energyCap, weapons, cargoCap);
-			airships.add(p);
-		} else if (type.toLowerCase().equals("combatship")) {
-			Airship p = new CombatShip(model, speed, range, price, energyCap, weapons);
-			airships.add(p);
-		} else if (type.toLowerCase().equals("cargoship")) {
-			Airship p = new CargoShip(model, speed, range, price, energyCap, cargoCap);
-			airships.add(p);
-		} else {
-			Airship p = new TourShip(model, speed, range, price, energyCap);
-			airships.add(p);
-		}
+	public void addShipToTower(Airship airship) {
+		airships.add(airship);
 	}
 
 	public void removeShipFromTower(int shipChoice) {
-		if (shipChoice >= 1) {
-			shipChoice = shipChoice - 1;
-			airships.remove(shipChoice);
+		if (shipChoice > 0 && shipChoice <= airships.size()) {
+			airships.remove(shipChoice - 1);
 		} else {
-			System.out.println("There are no more ships to remove");
+			System.out.println("Invalid choice. No ships to remove.");
 		}
 	}
 

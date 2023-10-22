@@ -8,8 +8,8 @@ package com.skilldistillery.airships.entities;
 public class CombatShip extends Airship implements Combat {
 	private int numWeapons;
 
-	public CombatShip(String model, double speed, int range, long price, double energyCap, int numWeapons) {
-		super(model, speed, range, price, energyCap);
+	public CombatShip(String model, double speed, int range, long price, int numWeapons) {
+		super(model, speed, range, price);
 		this.numWeapons = numWeapons;
 	}
 
@@ -36,36 +36,40 @@ public class CombatShip extends Airship implements Combat {
 
 	@Override
 	public void fly() {
-		System.out.println(toString() + " can fly for " + this.getRange() / this.getSpeed() + " hours.");
-	}
-
-	@Override
-	public double recharge() {
-		return 0;
+		double flightTime = this.getRange() / this.getSpeed();
+		System.out.printf("%s \n This ship can fly for %.2f hours.\n", toString(), flightTime);
 	}
 
 	@Override
 	public void dock() {
+		System.out.println("To the pub while they restock the ammunition.");
 	}
 
 	@Override
 	public double getSpeedInKnots() {
-		return 0;
+		double speedInKnots = 0.86898 * this.getSpeed();
+		return speedInKnots;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("CombatShip [numWeapons=");
-		builder.append(numWeapons);
-		builder.append(", ");
-		if (super.toString() != null) {
-			builder.append("toString()=");
-			builder.append(super.toString());
+		builder.append("This is a combat ship: \n");
+		if (getModel() != null) {
+			builder.append("Model is: ");
+			builder.append(getModel());
+			builder.append(", ");
 		}
-		builder.append("]");
+		builder.append(" units, Speed is: ");
+		builder.append(String.format("%.2f", getSpeedInKnots()));
+		builder.append(" knots, Range is: ");
+		builder.append(getRange());
+		builder.append(" miles, This ship has ");
+		builder.append(getNumWeapons());
+		builder.append(" weapons, Ship price is: ");
+		builder.append(getPrice());
+		builder.append(" dollars.");
 		return builder.toString();
 	}
-	
-	
+
 }

@@ -9,33 +9,39 @@ public class MultiShip extends Airship implements Combat, Cargo {
 	private int numWeapons;
 	private int cargoCapacityMax;
 	private int cargo;
-	
-	public MultiShip(String model, double speed, int range, long price, double energyCap, int numWeapons,
-			int cargoCapacityMax) {
-		super(model, speed, range, price, energyCap);
+
+	public MultiShip(String model, double speed, int range, long price, int numWeapons, int cargoCapacityMax) {
+		super(model, speed, range, price);
 		this.numWeapons = numWeapons;
 		this.cargoCapacityMax = cargoCapacityMax;
+		this.cargo = 0;
 	}
-	
+
 	public int getCargoCapacityMax() {
 		return cargoCapacityMax;
 	}
+
 	public int getNumWeapons() {
 		return numWeapons;
 	}
+
 	public void setNumWeapons(int numWeapons) {
 		this.numWeapons = numWeapons;
 	}
+
 	public int getCargo() {
 		return cargo;
 	}
+
 	public int getCargoCapacity() {
 		int cargoCapacity = cargoCapacityMax - cargo;
 		return cargoCapacity;
 	}
+
 	public void setCargo(int cargoCapacity) {
 		this.cargo = cargoCapacity;
 	}
+
 	@Override
 	public int loadCargo(int amt) {
 		int canLoad = cargoCapacityMax - cargo;
@@ -49,6 +55,7 @@ public class MultiShip extends Airship implements Combat, Cargo {
 			return amt - canLoad;
 		}
 	}
+
 	@Override
 	public int offloadCargo(int amt) {
 		int remaining = cargo - amt;
@@ -61,51 +68,60 @@ public class MultiShip extends Airship implements Combat, Cargo {
 		}
 		return Math.abs(remaining);
 	}
-	
+
 	@Override
 	public void attack() {
 		System.out.println("Manuevering to support.");
 	}
+
 	@Override
 	public void defend() {
 	}
+
 	@Override
 	public void standDown() {
 	}
+
 	@Override
 	public void fly() {
-		System.out.println(toString() + " can fly for " + this.getRange() / this.getSpeed() + " hours.");
+		double flightTime = this.getRange() / this.getSpeed();
+		System.out.printf("%s \n This ship can fly for %.2f hours.\n", toString(), flightTime);
 	}
-	@Override
-	public double recharge() {
-		return 0;
-	}
+
 	@Override
 	public void dock() {
+		System.out.println("Coming in to repair, restock, reload, and recharge!");
 	}
+
 	@Override
 	public double getSpeedInKnots() {
-		return 0;
+		double speedInKnots = 0.86898 * this.getSpeed();
+		return speedInKnots;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("MultiShip [numWeapons=");
-		builder.append(numWeapons);
-		builder.append(", cargoCapacityMax=");
-		builder.append(cargoCapacityMax);
-		builder.append(", cargo=");
-		builder.append(cargo);
-		builder.append(", ");
-		if (super.toString() != null) {
-			builder.append("toString()=");
-			builder.append(super.toString());
+		builder.append("This is a general purpose ship: \n");
+		if (getModel() != null) {
+			builder.append("Model is: ");
+			builder.append(getModel());
+			builder.append(", ");
 		}
-		builder.append("]");
+		builder.append("Maximum cargo space is: ");
+		builder.append(getCargoCapacityMax());
+		builder.append(" units, Current used cargo space is: ");
+		builder.append(getCargo());
+		builder.append(" units, Speed is: ");
+		builder.append(String.format("%.2f", getSpeedInKnots()));
+		builder.append(" knots, Range is: ");
+		builder.append(getRange());
+		builder.append(" miles, This ship has ");
+		builder.append(getNumWeapons());
+		builder.append(" weapons, Ship price is: ");
+		builder.append(getPrice());
+		builder.append(" dollars.");
 		return builder.toString();
 	}
-	
-	
-	
+
 }

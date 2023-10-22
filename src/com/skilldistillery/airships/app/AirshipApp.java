@@ -1,11 +1,12 @@
 /*
-Synopsis:
-Author:
-Version: 
+Synopsis Fleet control app (Jets but with Airships)
+Author: Jacob Stuart
+Version: 1.5 
  */
 package com.skilldistillery.airships.app;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,34 +31,70 @@ public class AirshipApp {
 	}
 
 	private void run() {
-		List<Airship> airships = new ArrayList<>();
+		fleetTower = new DockingTower(getShipsFromFile("airships.txt"));
 		Integer menuChoice = 0;
-		String userEntry = "";
+		int quit = 9;
 
-		fleetTower = new DockingTower(airships);
-		getShipsFromFile("airships.txt", fleetTower);
 		greeting();
-		while (menuChoice != 9) {
+
+		while (menuChoice != quit) {
 			displayMenu();
-			userEntry = kb.nextLine();
-			try {
-				menuChoice = Integer.parseInt(userEntry);
-			} catch (NumberFormatException e) {
-				System.err.println("Invalid entry");
-			}
+			menuChoice = getUserChoice();
 			menuSwitch(menuChoice);
 		}
+
+		farewell();
 	}
 
-	private void getShipsFromFile(String fileName, DockingTower tower) {
+	private List<Airship> getShipsFromFile(String fileName) {
+		List<Airship> airships = new ArrayList<>();
 
 		try (BufferedReader bufIn = new BufferedReader(new FileReader(fileName))) {
 			String line;
 			while ((line = bufIn.readLine()) != null) {
-				tower.addShipToTower(line);
+				Airship ship = buildShipFromLine(line);
+				airships.add(ship);
 			}
+		} catch (FileNotFoundException notFound) {
+			System.err.println(fileName + " was not found");
 		} catch (IOException e) {
-			System.err.println(e);
+			System.err.println("Error reading from " + fileName + ": " + e.getMessage());
+		}
+		return airships;
+	}
+
+	public Airship buildShipFromLine(String shipLine) {
+		String[] airship = shipLine.split(", ");
+		String type = airship[0];
+		String model = airship[1];
+		double speed = Double.parseDouble(airship[2]);
+		int range = Integer.parseInt(airship[3]);
+		long price = Long.parseLong(airship[4]);
+		int weapons = 0;
+		int cargoCap = 0;
+
+		if (airship.length == 6) {
+			weapons = Integer.parseInt(airship[5]);
+			cargoCap = Integer.parseInt(airship[5]);
+		}
+		if (airship.length == 7) {
+			cargoCap = Integer.parseInt(airship[6]);
+		}
+
+		Airship ship = createAirship(type, model, speed, range, price, weapons, cargoCap);
+		return ship;
+	}
+
+	private Airship createAirship(String type, String model, double speed, int range, long price, int weapons,
+			int cargoCap) {
+		if (type.toLowerCase().equals("multiship")) {
+			return new MultiShip(model, speed, range, price, weapons, cargoCap);
+		} else if (type.toLowerCase().equals("combatship")) {
+			return new CombatShip(model, speed, range, price, weapons);
+		} else if (type.toLowerCase().equals("cargoship")) {
+			return new CargoShip(model, speed, range, price, cargoCap);
+		} else {
+			return new TourShip(model, speed, range, price);
 		}
 	}
 
@@ -65,66 +102,86 @@ public class AirshipApp {
 		System.out.println();
 		System.out.println("Welcome, Admiral, to Airship fleet command.");
 		System.out.println();
-		System.out.println();
 	}
 
-	// had to copy/paste the border, couldn't find how to add alt codes in mac
+	private int getUserChoice() {
+		String userEntry = kb.nextLine();
+		int menuChoice = 0;
+		try {
+			menuChoice = Integer.parseInt(userEntry);
+		} catch (NumberFormatException e) {
+			System.err.println("Invalid input. Please enter a valid number.");
+		}
+		return menuChoice;
+	}
+
 	private void displayMenu() {
 		System.out.println();
+		System.out.println("\nAirship Fleet Menu");
+		System.out.println("Please choose one menu option:");
+		System.out.println("1. List fleet");
+		System.out.println(fleetTower.getIsDocked() ? "2. Fly all ships" : "2. Dock all ships");
+		System.out.println("3. View fastest ship");
+		System.out.println("4. View ship with longest range");
+		System.out.println(fleetTower.getIsDocked() ? "5. Load cargo" : "5. Defend against pirates");
+		System.out.println("6. Take a tour");
+		System.out.println("7. Add a ship to Fleet");
+		System.out.println("8. Remove a ship from the Fleet");
+		System.out.println("9. Quit");
+		System.out.print("$> ");
 		System.out.println();
-		System.out.println("╔══════════════════════════════════╗");
-		System.out.println("║        Airship Fleet Menu        ║");
-		System.out.println("║  Please choose one menu option.  ║");
-		System.out.println("╚══════════════════════════════════╝");
-		System.out.println("║ 1. List fleet 		   ║");
-		System.out.println("║ 2. Fly all ships		   ║");
-		System.out.println("║ 3. View fastest ship		   ║");
-		System.out.println("║ 4. View ship with longest range  ║");
-		System.out.println("║ 5. Load cargo			   ║");
-		System.out.println("║ 6. Defend against pirates	   ║");
-		System.out.println("║ 7. Add a ship to Fleet  	   ║");
-		System.out.println("║ 8. Remove a jet from Fleet  	   ║");
-		System.out.println("║ 9. Quit   			   ║");
-		System.out.println("╚══════════════════════════════════╝");
-		System.out.println();
-		System.out.println("$>");
 	}
 
 	private void menuSwitch(int choice) {
-		switch (choice) {
-		case 1:
-			fleetTower.displayAirships();
-			break;
-		case 2:
-			fleetTower.flyAll();
-			break;
-		case 3:
-			fastestShip();
-			break;
-		case 4:
-			longestRangeShip();
-			break;
-		case 5:
-			addCargo();
-			break;
-		case 6:
-			fightEnemies();
-			break;
-		case 7:
-			addNewShip();
-			break;
-		case 8:
-			removeShip();
-			break;
-		case 9:
-			farewell();
-			break;
-		default:
-			break;
-		}
+
+		if (choice > 0 && choice < 10) {
+
+			switch (choice) {
+			case 1:
+				fleetTower.displayAirships();
+				break;
+			case 2:
+				if (fleetTower.getIsDocked()) {
+					fleetTower.flyAll();
+				} else {
+					fleetTower.dockAll();
+				}
+				break;
+			case 3:
+				System.out.println("The fastest ship in the fleet currently is: ");
+				findFastestShip();
+				break;
+			case 4:
+				System.out.println("The ship in the fleet with the longest range currently is: ");
+				findLongestRangeShip();
+				break;
+			case 5:
+				if (fleetTower.getIsDocked()) {
+					addCargo();
+				} else {
+					fightEnemies();
+				}
+				break;
+			case 6:
+				takeTour();
+				break;
+			case 7:
+				addNewShip();
+				break;
+			case 8:
+				removeShip();
+				break;
+			case 9:
+				farewell();
+				break;
+			default:
+				break;
+			}
+		} else
+			System.err.println("I am sorry, that number was not an option, please choose 1 through 9.");
 	}
 
-	private void fastestShip() {
+	private void findFastestShip() {
 		List<Airship> fastest = fleetTower.getAirships();
 		double fastestSpeed = 0;
 		for (Airship airship : fastest) {
@@ -140,12 +197,12 @@ public class AirshipApp {
 		System.out.println();
 	}
 
-	private void longestRangeShip() {
+	private void findLongestRangeShip() {
 		List<Airship> furthest = fleetTower.getAirships();
 		double furthestRange = 0;
 		for (Airship airship : furthest) {
 			if (furthestRange < airship.getRange()) {
-				furthestRange= airship.getRange();
+				furthestRange = airship.getRange();
 			}
 		}
 		for (Airship airship : furthest) {
@@ -184,15 +241,13 @@ public class AirshipApp {
 				System.out.println(amount + " will not fit and is left on the dock.");
 			}
 		} else {
-			System.err.println(
-					"I am sorry, that is not a valid entry. Please enter go back to the main menu and try again");
+			System.err.println("I am sorry, that is not a valid entry. Please go back to the main menu and try again.");
 		}
 	}
 
 	private void fightEnemies() {
-		List<Airship> airships = new ArrayList<>();
-		DockingTower pirateTower = new DockingTower(airships);
-		getShipsFromFile("pirates.txt", pirateTower);
+		List<Airship> enemyAirships = getShipsFromFile("pirates.txt");
+		DockingTower pirateTower = new DockingTower(enemyAirships);
 		System.out.println("Pirates on the horizon");
 		pirateTower.displayAirships();
 		int fleetWeapons = fleetTower.getNumberWeapons();
@@ -219,28 +274,37 @@ public class AirshipApp {
 		}
 	}
 
-	private void addNewShip() {
-		addNewShipMenu();		
-		Integer shipChoice = 0;
-		String userEntry = "";
+	private void takeTour() {
+		for (Airship airship : fleetTower.getAirships()) {
+			if (airship instanceof TourShip) {
 
-		try {
-			userEntry = kb.nextLine();
-			shipChoice = Integer.parseInt(userEntry);
-		} catch (Exception e) {
-			System.err.println("That was not a valid option. Please go back to the main menu and try again.");
-		}
-
-		if (shipChoice > 0 && shipChoice < 5) {
-			fleetTower.addShipToTower(shipLineBuilder(shipChoice));
-		} else {
-			System.err.println("That is not a valid number. Please go back to the main menu and try again.");
+				System.out.println("Just sit right back and you'll hear a tale,\n" + "A tale of a fateful trip\n"
+						+ "That started from this tropic port\n" + "Aboard this tiny ship.\n" + "\n"
+						+ "The mate was a mighty sailing man,\n" + "The skipper brave and sure.\n"
+						+ "Five passengers set sail that day\n" + "For a three hour tour, a three hour tour.\n" + "\n"
+						+ "The weather started getting rough,\n" + "The tiny ship was tossed,\n"
+						+ "If not for the courage of the fearless crew\n"
+						+ "The Minnow would be lost, the Minnow would be lost.\n" + "\n"
+						+ "The ship set ground on the shore of this uncharted desert isle\n" + "With Gilligan\n"
+						+ "The Skipper too,\n" + "The millionaire and his wife,\n" + "The movie star\n"
+						+ "The Professor and Mary Ann,*\n" + "Here on Gilligan's Isle.\n" + "\n");
+			}
 		}
 	}
-	
-	public String shipLineBuilder(int shipChoice) {
+
+	private void addNewShip() {
+		addNewShipMenu();
+		int shipChoice = getUserChoice();
+		if (shipChoice > 0 && shipChoice < 5) {
+			fleetTower.addShipToTower(buildShipFromLine(buildShipLine(shipChoice)));
+		} else {
+			System.err.println("Invalid choice. Please enter a number from 1 to 4.");
+		}
+	}
+
+	public String buildShipLine(int shipChoice) {
 		StringBuilder ship = new StringBuilder();
-		
+
 		System.out.println("Please provide the model for the new ship: ");
 		ship.append(kb.nextLine() + ", ");
 		System.out.println("Please provide the speed of the new ship in MPH: ");
@@ -248,8 +312,6 @@ public class AirshipApp {
 		System.out.println("Please provide the range the new ship can go for: ");
 		ship.append(kb.nextLine() + ", ");
 		System.out.println("Please provide the price of the new ship: ");
-		ship.append(kb.nextLine() + ", ");
-		System.out.println("Please provide the energy or fuel capacity of the new ship: ");
 		ship.append(kb.nextLine() + ", ");
 		if (shipChoice == 3) {
 			ship.insert(0, "CombatShip, ");
@@ -264,9 +326,9 @@ public class AirshipApp {
 			System.out.println("Please provide the number of weapons on the new ship: ");
 			ship.append(kb.nextLine() + ", ");
 			System.out.println("Please provide the maximum cargo space available on the new ship: ");
-			ship.append(kb.nextLine() + ", ");			
+			ship.append(kb.nextLine() + ", ");
 		}
-		
+
 		return ship.toString();
 	}
 
@@ -287,21 +349,14 @@ public class AirshipApp {
 	}
 
 	private void removeShip() {
-		System.out.println("Please choose which ship to remove.");
-		Integer shipChoice = 0;
-		String userEntry = "";
 		fleetTower.displayAirships();
-		
-		try {
-			userEntry = kb.nextLine();
-			shipChoice = Integer.parseInt(userEntry);
-		} catch (Exception e) {
-			System.err.println("That was not a valid option. Please go back to the main menu and try again.");
-		}
+		System.out.println("Please choose which ship to remove.");
+		Integer shipChoice = getUserChoice();
+
 		if (shipChoice > 0 && shipChoice <= fleetTower.getAirships().size()) {
 			fleetTower.removeShipFromTower(shipChoice);
 		} else {
-			System.err.println("That is not a valid number. Please go back to the main menu and try again.");
+			System.err.println("Invalid choice. Please enter a valid number.");
 		}
 	}
 

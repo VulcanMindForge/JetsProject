@@ -43,12 +43,22 @@ Pirate defense implemented
 Implemented add ship method
 Implemented remove ship method
 Implemented quit to stop program and escape infinite loop
-
+Fixed toString to print out information in easier way
+Edited menu to be more easily changed in the future
+Set up menu to flip between docked or in flight
+Set up menu to flip between interface methods depending on flight status
+Added a tour menu option to make sure tour ships are accounted for
 
 # Next Steps
-Fix toStrings and display content in a nicer format.
-Fix menu to display based on flight status of fleet.
-Add Tour and docking options
+Update UML to finalized version.
+Add Pilots
+Add ability to take out a single ship
+Add ability to fight a ship one on one
+Randomly assign pilots
+Add menu option to save ship list to new txt file
+Add option to change initial list to user desired list
+Implement offload Cargo option
+Fix error handling so only one error shows depending on exceptions thrown
 
 # Lessons learned or reinforced on this project
 Start getting in the habit of least privelage. Keep private what you can, it can be made public later if needed with less chance of causing issues with code.
@@ -59,9 +69,12 @@ Airships are fun!
 
 ASCII alt codes are much harder on a mac
 
+It is easy to end up duplicating code, must be more mindful of that.
+
 # Lessons to research
 Menu/Switch class to use with future projects
 Sort interface or class to use with future projects
+
 
 # Link to initial UML Files
 [Class Diagrams UML](https://github.com/VulcanMindForge/JetsProject/tree/main/UML%20Diagrams)
