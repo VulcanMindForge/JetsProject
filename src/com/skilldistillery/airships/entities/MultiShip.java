@@ -41,7 +41,12 @@ public class MultiShip extends Airship implements Combat, Cargo {
 	public void setCargo(int cargoCapacity) {
 		this.cargo = cargoCapacity;
 	}
-
+	
+	public String getShipType() {
+		String type = "MultiShip";
+		return type;
+	}
+	
 	@Override
 	public int loadCargo(int amt) {
 		int canLoad = cargoCapacityMax - cargo;
@@ -99,10 +104,32 @@ public class MultiShip extends Airship implements Combat, Cargo {
 		return speedInKnots;
 	}
 
+	
+	
+	@Override
+	public String shipToFile() {
+		StringBuilder build = new StringBuilder();
+		build.append(getShipType());
+		build.append(", ");
+		build.append(getModel());
+		build.append(", ");
+		build.append(getSpeed());
+		build.append(", ");
+		build.append(getRange());
+		build.append(", ");
+		build.append(getPrice());
+		build.append(", ");
+		build.append(getNumWeapons());
+		build.append(", ");
+		build.append(getCargoCapacityMax());		
+		return build.toString();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("This is a general purpose ship: \n");
+		builder.append("This is a multi-purpose ship,");
+		builder.append(" " + (getIsFlying() ? "and is currently in flight. " : "and is currently docked at tower. "));
 		if (getModel() != null) {
 			builder.append("Model is: ");
 			builder.append(getModel());

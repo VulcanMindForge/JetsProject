@@ -31,6 +31,11 @@ public class CargoShip extends Airship implements Cargo {
 	public void setCargo(int cargo) {
 		this.cargo = cargo;
 	}
+	
+	public String getShipType() {
+		String type = "CargoShip";
+		return type;
+	}
 
 	@Override
 	public int loadCargo(int amt) {
@@ -76,10 +81,30 @@ public class CargoShip extends Airship implements Cargo {
 		return speedInKnots;
 	}
 
+	
+	
+	@Override
+	public String shipToFile() {
+		StringBuilder build = new StringBuilder();
+		build.append(getShipType());
+		build.append(", ");
+		build.append(getModel());
+		build.append(", ");
+		build.append(getSpeed());
+		build.append(", ");
+		build.append(getRange());
+		build.append(", ");
+		build.append(getPrice());
+		build.append(", ");
+		build.append(getCargoCapacityMax());		
+		return build.toString();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("This is a cargo ship: \n");
+		builder.append("This is a cargo ship,");
+		builder.append(" " + (getIsFlying() ? "and is currently in flight. " : "and is currently docked at tower. "));
 		if (getModel() != null) {
 			builder.append("Model is: ");
 			builder.append(getModel());

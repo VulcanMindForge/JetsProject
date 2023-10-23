@@ -8,7 +8,9 @@ package com.skilldistillery.airships.app;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,9 +23,10 @@ import com.skilldistillery.airships.entities.MultiShip;
 import com.skilldistillery.airships.entities.TourShip;
 
 public class AirshipApp {
-	DockingTower fleetTower;
-	DockingTower pirateTower;
-	Scanner kb = new Scanner(System.in);
+	private DockingTower fleetTower;
+	private Scanner kb = new Scanner(System.in);
+	private boolean shipIsRemoved = false;
+	private boolean shipIsSent = false;
 
 	public static void main(String[] args) {
 		AirshipApp app = new AirshipApp();
@@ -33,7 +36,7 @@ public class AirshipApp {
 	private void run() {
 		fleetTower = new DockingTower(getShipsFromFile("airships.txt"));
 		Integer menuChoice = 0;
-		int quit = 9;
+		int quit = 12;
 
 		greeting();
 
@@ -42,8 +45,6 @@ public class AirshipApp {
 			menuChoice = getUserChoice();
 			menuSwitch(menuChoice);
 		}
-
-		farewell();
 	}
 
 	private List<Airship> getShipsFromFile(String fileName) {
@@ -123,18 +124,21 @@ public class AirshipApp {
 		System.out.println(fleetTower.getIsDocked() ? "2. Fly all ships" : "2. Dock all ships");
 		System.out.println("3. View fastest ship");
 		System.out.println("4. View ship with longest range");
-		System.out.println(fleetTower.getIsDocked() ? "5. Load cargo" : "5. Defend against pirates");
-		System.out.println("6. Take a tour");
-		System.out.println("7. Add a ship to Fleet");
-		System.out.println("8. Remove a ship from the Fleet");
-		System.out.println("9. Quit");
+		System.out.println(shipIsSent ? "5. Return single ship." : "5. Choose to send out a single ship.");
+		System.out.println(fleetTower.getIsDocked() ? "6. Load cargo" : "6. Defend against pirates");
+		System.out.println("7. Take a tour");
+		System.out.println("8. Add a ship to Fleet");
+		System.out.println(shipIsRemoved ? "9. Undo most recent ship removal." : "9. Remove a ship from the Fleet");
+		System.out.print(shipIsRemoved ? "10. Remove another ship.\n" : "");
+		System.out
+				.println((shipIsRemoved ? "11." : "10.") + " Would you like to save current Airship fleet to a file?");
+		System.out.println((shipIsRemoved ? "12." : "11.") + " Quit");
 		System.out.print("$> ");
-		System.out.println();
 	}
 
 	private void menuSwitch(int choice) {
 
-		if (choice > 0 && choice < 10) {
+		if (shipIsRemoved && choice > 0 && choice < 13 || !shipIsRemoved && choice > 0 && choice < 12) {
 
 			switch (choice) {
 			case 1:
@@ -142,9 +146,9 @@ public class AirshipApp {
 				break;
 			case 2:
 				if (fleetTower.getIsDocked()) {
-					fleetTower.flyAll();
+					fleetTower.flyAllDocked();
 				} else {
-					fleetTower.dockAll();
+					fleetTower.dockAllFlying();
 				}
 				break;
 			case 3:
@@ -156,29 +160,63 @@ public class AirshipApp {
 				findLongestRangeShip();
 				break;
 			case 5:
+				if (!shipIsSent) {
+					Airship sentShip = chooseSingleShip();
+					fleetTower.sendSingleShipFromTower(sentShip);
+					shipIsSent = true;
+				} else {
+					fleetTower.returnSingleShipFromTower();
+					shipIsSent = false;
+				}
+				break;
+			case 6:
 				if (fleetTower.getIsDocked()) {
 					addCargo();
 				} else {
 					fightEnemies();
 				}
 				break;
-			case 6:
+			case 7:
 				takeTour();
 				break;
-			case 7:
+			case 8:
 				addNewShip();
 				break;
-			case 8:
-				removeShip();
-				break;
 			case 9:
+				if (!shipIsRemoved) {
+					Airship removedShip = chooseSingleShip();
+					fleetTower.removeShipFromTower(removedShip);
+					shipIsRemoved = true;
+				} else {
+					fleetTower.returnRemovedShipToTower();
+					shipIsRemoved = false;
+				}
+				break;
+			case 10:
+				if (shipIsRemoved) {
+					Airship removedShip = chooseSingleShip();
+					fleetTower.removeShipFromTower(removedShip);
+					shipIsRemoved = true;
+				} else {
+					writeAirshipFleetToFile();
+				}
+				break;
+			case 11:
+				if (!shipIsRemoved) {
+					farewell();
+				} else {
+					writeAirshipFleetToFile();
+				}
+				break;
+			case 12:
 				farewell();
 				break;
 			default:
 				break;
 			}
-		} else
+		} else {
 			System.err.println("I am sorry, that number was not an option, please choose 1 through 9.");
+		}
 	}
 
 	private void findFastestShip() {
@@ -348,16 +386,32 @@ public class AirshipApp {
 
 	}
 
-	private void removeShip() {
+	private Airship chooseSingleShip() {
 		fleetTower.displayAirships();
 		System.out.println("Please choose which ship to remove.");
 		Integer shipChoice = getUserChoice();
-
 		if (shipChoice > 0 && shipChoice <= fleetTower.getAirships().size()) {
-			fleetTower.removeShipFromTower(shipChoice);
+			return fleetTower.getSingleShip(shipChoice);
 		} else {
 			System.err.println("Invalid choice. Please enter a valid number.");
+			return null;
 		}
+	}
+
+	private void writeAirshipFleetToFile() {
+		List<Airship> airships = fleetTower.getAirships();
+	    System.out.println("Please enter the name for your file (without extension)");
+	    String fileName = kb.nextLine();
+	    
+	    try (PrintWriter writer = new PrintWriter(new FileWriter(fileName + ".txt"))) {
+	        for (Airship airship : airships) {
+	        	String shipToFile = airship.shipToFile();
+				writer.println(shipToFile);
+	        }
+	        System.out.println("Airships saved to " + fileName + ".txt");
+	    } catch (IOException e) {
+	        System.err.println("Error while saving to file: " + e.getMessage());
+	    }
 	}
 
 	private void farewell() {

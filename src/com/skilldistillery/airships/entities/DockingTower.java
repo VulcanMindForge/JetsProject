@@ -9,7 +9,8 @@ import java.util.List;
 
 public class DockingTower {
 	private List<Airship> airships;
-	boolean isDocked = true;
+	Airship sentShip;
+	Airship removedShip;
 
 	public DockingTower(List<Airship> airships) {
 		this.airships = airships;
@@ -25,6 +26,19 @@ public class DockingTower {
 			System.out.println(shipNumber + " " + airship);
 			shipNumber++;
 		}
+	}
+	
+	public Airship getSingleShip (int index) {
+		return airships.get(index - 1);
+	}
+	
+	public boolean getIsDocked() {
+		boolean allDocked = true;
+		
+		for (Airship airship : airships) {
+			allDocked = !airship.getIsFlying();
+		}
+		return allDocked;
 	}
 
 	public int getAvailableCapacity() {
@@ -57,23 +71,23 @@ public class DockingTower {
 		return numWeapons;
 	}
 
-	public boolean getIsDocked() {
-		return isDocked;
+	public void flyAllDocked() {
+		for (Airship airship : airships) {
+			if (!airship.getIsFlying()) {
+				airship.setFlying(true);
+				airship.fly();
+				System.out.println();
+			} 
+		}
 	}
 
-	public void flyAll() {
+	public void dockAllFlying() {
 		for (Airship airship : airships) {
-			airship.fly();
-			System.out.println();
+			if (airship.getIsFlying()) {
+				airship.setFlying(false);
+				airship.dock();
+			}
 		}
-		isDocked = false;
-	}
-
-	public void dockAll() {
-		for (Airship airship : airships) {
-			airship.dock();
-		}
-		isDocked = true;
 	}
 
 	public void displayFlightStatus() {
@@ -86,12 +100,26 @@ public class DockingTower {
 		airships.add(airship);
 	}
 
-	public void removeShipFromTower(int shipChoice) {
-		if (shipChoice > 0 && shipChoice <= airships.size()) {
-			airships.remove(shipChoice - 1);
-		} else {
-			System.out.println("Invalid choice. No ships to remove.");
-		}
+	public void removeShipFromTower(Airship shipChoice) {
+		System.out.println(shipChoice + " removed from fleet.");
+		int indexToRemove = airships.indexOf(shipChoice);
+		removedShip = airships.remove(indexToRemove);		
+	}
+
+	public void sendSingleShipFromTower(Airship shipChoice) {
+		System.out.println(shipChoice + " headed out on patrol.");
+		int indexToRemove = airships.indexOf(shipChoice);
+		sentShip = airships.remove(indexToRemove);		
+	}
+
+	public void returnRemovedShipToTower() {
+		System.out.println(removedShip + " removal being reversed.");
+		airships.add(removedShip);
+	}
+	
+	public void returnSingleShipFromTower() {
+		System.out.println(sentShip + " returning to tower.");
+		airships.add(sentShip);
 	}
 
 	@Override

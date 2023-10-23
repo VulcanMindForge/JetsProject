@@ -40,11 +40,17 @@ public abstract class Airship {
 		return isFlying;
 	}
 
+	public void setFlying(boolean isFlying) {
+		this.isFlying = isFlying;
+	}
+
 	public abstract void fly();
 
 	public abstract void dock();
 
 	public abstract double getSpeedInKnots();
+	
+	public abstract String shipToFile();
 
 	@Override
 	public String toString() {

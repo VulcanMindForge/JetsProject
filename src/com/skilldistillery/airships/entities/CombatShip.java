@@ -12,7 +12,7 @@ public class CombatShip extends Airship implements Combat {
 		super(model, speed, range, price);
 		this.numWeapons = numWeapons;
 	}
-
+	
 	public int getNumWeapons() {
 		return numWeapons;
 	}
@@ -21,6 +21,11 @@ public class CombatShip extends Airship implements Combat {
 		this.numWeapons = numWeapons;
 	}
 
+	public String getShipType() {
+		String type = "CombatShip";
+		return type;
+	}
+	
 	@Override
 	public void attack() {
 		System.out.println("We're headed over to blow them out of the sky!");
@@ -51,10 +56,30 @@ public class CombatShip extends Airship implements Combat {
 		return speedInKnots;
 	}
 
+	
+	
+	@Override
+	public String shipToFile() {
+		StringBuilder build = new StringBuilder();
+		build.append(getShipType());
+		build.append(", ");
+		build.append(getModel());
+		build.append(", ");
+		build.append(getSpeed());
+		build.append(", ");
+		build.append(getRange());
+		build.append(", ");
+		build.append(getPrice());
+		build.append(", ");
+		build.append(getNumWeapons());		
+		return build.toString();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("This is a combat ship: \n");
+		builder.append("This is a combat ship,");
+		builder.append(" " + (getIsFlying() ? "and is currently in flight. " : "and is currently docked at tower. "));
 		if (getModel() != null) {
 			builder.append("Model is: ");
 			builder.append(getModel());

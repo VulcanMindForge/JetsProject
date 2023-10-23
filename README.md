@@ -48,28 +48,28 @@ Edited menu to be more easily changed in the future
 Set up menu to flip between docked or in flight
 Set up menu to flip between interface methods depending on flight status
 Added a tour menu option to make sure tour ships are accounted for
+Add ability to take out a single ship
+Add menu option to save ship list to new txt file
+Created pilot class
+Haven't implemented Pilot class to app.
 
 # Next Steps
 Update UML to finalized version.
-Add Pilots
-Add ability to take out a single ship
 Add ability to fight a ship one on one
 Randomly assign pilots
-Add menu option to save ship list to new txt file
 Add option to change initial list to user desired list
 Implement offload Cargo option
 Fix error handling so only one error shows depending on exceptions thrown
 
 # Lessons learned or reinforced on this project
 Start getting in the habit of least privelage. Keep private what you can, it can be made public later if needed with less chance of causing issues with code.
-
 Abstract methods, interfaces, and classes help to make code more organized and improve readability.
-
 Airships are fun!
-
 ASCII alt codes are much harder on a mac
-
 It is easy to end up duplicating code, must be more mindful of that.
+Plan out methods better, take a second run through plan after first coding session, make adjustments.
+File Input/Output can be incredibly useful
+
 
 # Lessons to research
 Menu/Switch class to use with future projects

@@ -10,7 +10,12 @@ public class TourShip extends Airship {
 	public TourShip(String model, double speed, int range, long price) {
 		super(model, speed, range, price);
 	}
-
+	
+	public String getShipType() {
+		String type = "TourShip";
+		return type;
+	}
+	
 	@Override
 	public void fly() {
 		double flightTime = this.getRange() / this.getSpeed();
@@ -27,11 +32,29 @@ public class TourShip extends Airship {
 		double speedInKnots = 0.86898 * this.getSpeed();
 		return speedInKnots;
 	}
+	
+	
+	
+	@Override
+	public String shipToFile() {
+		StringBuilder build = new StringBuilder();
+		build.append(getShipType());
+		build.append(", ");
+		build.append(getModel());
+		build.append(", ");
+		build.append(getSpeed());
+		build.append(", ");
+		build.append(getRange());
+		build.append(", ");
+		build.append(getPrice());
+		return build.toString();
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("This is a tour ship: \n");
+		builder.append("This is a tour ship,");
+		builder.append(" " + (getIsFlying() ? "and is currently in flight. " : "and is currently docked at tower. "));
 		if (getModel() != null) {
 			builder.append("Model is: ");
 			builder.append(getModel());
