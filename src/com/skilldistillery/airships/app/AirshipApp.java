@@ -75,10 +75,11 @@ public class AirshipApp {
 		int cargoCap = 0;
 
 		if (airship.length == 6) {
-			weapons = Integer.parseInt(airship[5]);
 			cargoCap = Integer.parseInt(airship[5]);
+			weapons = Integer.parseInt(airship[5]);
 		}
 		if (airship.length == 7) {
+			weapons = Integer.parseInt(airship[5]);
 			cargoCap = Integer.parseInt(airship[6]);
 		}
 
