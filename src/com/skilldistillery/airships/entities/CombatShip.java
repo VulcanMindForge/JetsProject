@@ -51,14 +51,6 @@ public class CombatShip extends Airship implements Combat {
 	}
 
 	@Override
-	public double getSpeedInKnots() {
-		double speedInKnots = 0.86898 * this.getSpeed();
-		return speedInKnots;
-	}
-
-	
-	
-	@Override
 	public String shipToFile() {
 		StringBuilder build = new StringBuilder();
 		build.append(getShipType());

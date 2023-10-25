@@ -366,6 +366,8 @@ public class AirshipApp {
 			ship.append(kb.nextLine() + ", ");
 			System.out.println("Please provide the maximum cargo space available on the new ship: ");
 			ship.append(kb.nextLine() + ", ");
+		} else {
+			ship.insert(0, "TourShip, ");
 		}
 
 		return ship.toString();
@@ -401,18 +403,18 @@ public class AirshipApp {
 
 	private void writeAirshipFleetToFile() {
 		List<Airship> airships = fleetTower.getAirships();
-	    System.out.println("Please enter the name for your file (without extension)");
-	    String fileName = kb.nextLine();
-	    
-	    try (PrintWriter writer = new PrintWriter(new FileWriter(fileName + ".txt"))) {
-	        for (Airship airship : airships) {
-	        	String shipToFile = airship.shipToFile();
+		System.out.println("Please enter the name for your file (without extension)");
+		String fileName = kb.nextLine();
+
+		try (PrintWriter writer = new PrintWriter(new FileWriter(fileName + ".txt"))) {
+			for (Airship airship : airships) {
+				String shipToFile = airship.shipToFile();
 				writer.println(shipToFile);
-	        }
-	        System.out.println("Airships saved to " + fileName + ".txt");
-	    } catch (IOException e) {
-	        System.err.println("Error while saving to file: " + e.getMessage());
-	    }
+			}
+			System.out.println("Airships saved to " + fileName + ".txt");
+		} catch (IOException e) {
+			System.err.println("Error while saving to file: " + e.getMessage());
+		}
 	}
 
 	private void farewell() {

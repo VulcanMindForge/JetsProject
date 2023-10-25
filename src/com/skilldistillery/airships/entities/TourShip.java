@@ -26,14 +26,6 @@ public class TourShip extends Airship {
 	public void dock() {
 		System.out.println("We hope you enjoyed the tour. Next one is leaving in 30 minutes.");
 	}
-
-	@Override
-	public double getSpeedInKnots() {
-		double speedInKnots = 0.86898 * this.getSpeed();
-		return speedInKnots;
-	}
-	
-	
 	
 	@Override
 	public String shipToFile() {

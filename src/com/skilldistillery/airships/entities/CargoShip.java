@@ -76,14 +76,6 @@ public class CargoShip extends Airship implements Cargo {
 	}
 
 	@Override
-	public double getSpeedInKnots() {
-		double speedInKnots =  0.86898 * this.getSpeed();
-		return speedInKnots;
-	}
-
-	
-	
-	@Override
 	public String shipToFile() {
 		StringBuilder build = new StringBuilder();
 		build.append(getShipType());

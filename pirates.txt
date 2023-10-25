@@ -1,4 +1,7 @@
-CombatShip, Frigate, 35, 3000, 7640000, 10
-MultiShip, Brigantine, 30, 3500, 6697250, 5, 10
-CombatShip, Frigate, 35, 3000, 7640000, 10
-MultiShip, Brigantine, 30, 3500, 6697250, 5, 10
+CargoShip, Clipper, 25.0, 4000, 8610750, 20
+CargoShip, Clipper, 20.0, 3250, 8430750, 30
+CombatShip, Frigate, 35.0, 3000, 7400000, 10
+CombatShip, Frigate, 40.0, 3000, 7640000, 8
+MultiShip, Brigantine, 28.0, 3200, 6517250, 2, 15
+MultiShip, Brigantine, 30.0, 3500, 6697250, 5, 10
+TourShip, Sloop, 20.0, 1500, 5247500

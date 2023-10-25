@@ -44,11 +44,15 @@ public abstract class Airship {
 		this.isFlying = isFlying;
 	}
 
+	public double getSpeedInKnots() {
+		double speedInKnots = 0.86898 * this.getSpeed();
+		return speedInKnots;
+	}
+	
 	public abstract void fly();
 
 	public abstract void dock();
 
-	public abstract double getSpeedInKnots();
 	
 	public abstract String shipToFile();
 

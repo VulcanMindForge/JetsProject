@@ -97,14 +97,6 @@ public class MultiShip extends Airship implements Combat, Cargo {
 	public void dock() {
 		System.out.println("Coming in to repair, restock, reload, and recharge!");
 	}
-
-	@Override
-	public double getSpeedInKnots() {
-		double speedInKnots = 0.86898 * this.getSpeed();
-		return speedInKnots;
-	}
-
-	
 	
 	@Override
 	public String shipToFile() {
